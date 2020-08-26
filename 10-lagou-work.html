@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        #app{
+            width:300px;
+            height:600px;
+            border:1px solid #000;
+            position:relative;
+        }
+        #head{
+            width:300px;
+            height:50px;
+            background:cadetblue;
+            color:#fff;
+            line-height: 50px;
+            text-align: center;
+            font-size: 20px;
+        }
+        /* #main{
+            width:300px;
+            height:500px;
+        } */
+        .foot-list{
+            /* height:50px; */
+            width:300px;
+            margin:0;
+            padding:0;
+            position:absolute;
+            bottom:0px;
+        }
+        .foot-list li{
+            float:left;
+            height:50px;
+            width:98px;
+            list-style: none;
+            border:1px solid #000;
+            text-align: center;
+            line-height: 50px;
+        }
+        .main-list{
+            margin:0;
+            padding:0;
+            list-style: none;
+        }
+        .main-list li{
+            border-bottom:1px solid #000;
+            height:100px;
+        }
+        .left{float:left;}
+        .right{float:right;
+        height:100px;
+    line-height: 80px;}
+    
+    </style>
+</head>
+<body>
+    <div id='app'>
+        <div id='head'>拉勾网</div>
+        <div id='main'></div>
+        <div id='foot'>
+            <component :is="getTab"></component>
+            <ul class='foot-list'>
+                <li v-for="item in list" @click="handleClick(item)">
+                  {{item.text}}
+                </li>
+              </ul>
+        </div>
+    </div>
+    <script>
+    //     Vue.component('custom-position', {
+    //   template: `
+    //      <div>职位信息</div>
+    //   `
+    // })
+
+
+
+    Vue.component("custom-position", {
+        data: function() {
+          return {
+            position: [
+              {
+                money:"15K-25K",
+                title: "希悦",
+                content:
+                  "UI设计师"
+              },
+              {
+                money: "10K-17K",
+                title: "飞榴科技",
+                content:
+                  "Sass平台运维工程师"
+              },
+              {
+                money: "7K-12K",
+                title: "天鹏恒宇",
+                content:
+                  ".NET开发工程师"
+              }
+            ]
+          };
+        },
+        template: `
+            <div>
+                <h3>职位信息</h3>
+                <ul class='main-list'>
+                    <li v-for="posts in position">
+                        <div class='left'>
+                            <h4>{{posts.title}}</h4>
+                            <p>{{posts.content}}</p>
+                        </div>
+                        <div class='right'>
+                            <p>{{posts.money}}</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        `
+            })
+
+
+
+
+
+
+    Vue.component('custom-search', {
+      template: `
+         <div>搜索</div>
+      `
+    })
+    Vue.component('custom-my', {
+      template: `
+         <div>我的</div>
+      `
+    })
+
+
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                currentTab: 'position',
+                list:[
+                { id: 'position', text: "职位" },
+                { id: 'search', text: "搜索" },
+                { id: 'my', text: "我的" }
+                ]
+            },
+            computed: {
+                getTab() {
+                return 'custom-' + this.currentTab
+                }
+            },
+            methods:{
+                handleClick(item) {
+                this.currentTab = item.id
+                }
+            }
+        })
+
+        
+    </script>
+</body>
+</html>
