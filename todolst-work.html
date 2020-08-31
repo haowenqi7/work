@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            list-style: none;
+        }
+        body {
+            font-size: 16px;
+            background: darkgray;
+        }
+        div[v-cloak]{
+            display: none;
+        }
+        /* 头部开始 */
+        .header{
+            height: 50px;
+            background-color: #333;
+        }
+        section {
+            margin: 0 auto;
+        }
+        section {
+            width: 600px;
+            padding: 0 10px;
+            
+        }
+        label{
+            float: left;
+            width: 100px;
+            line-height: 50px;
+            color: #ddd;
+            font-size: 23px;
+            cursor: pointer;
+        }
+        header>section form{
+            position: relative;
+        }
+        header>section form>input{
+            float:right;
+            width: 60%;
+            height: 25px;
+            margin-top: 12px;
+            border-radius: 5px;
+            text-indent: 10px;
+            border: none;
+            outline: none;
+            
+        }
+        .section{
+            margin-top: 30px;
+        }
+        /* 头部结束 */
+        
+        h2{
+            position: relative;
+        }
+        h2:nth-of-type(2) {
+            margin-top: 20px;;
+        }
+        li>input {
+            position: absolute;
+            top: 6px;
+            left: 10px;
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+        }
+        li {
+            height: 33px;
+            line-height: 33px;    
+            background-color: #fff;
+            position: relative;
+            padding: 0 45px;
+            margin-bottom: 10px;
+            margin-top: 20px;;
+        }
+        li p input {
+            top: 3px;
+            left: 40px;
+            width: 70%;
+            height: 20px;
+            line-height: 14px;
+            text-indent: 6px;
+            font-size: 15px;
+        }
+        li a {
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            display: inline-block;
+            width: 40px;
+            height: 28px;
+            background: #CCC;
+            line-height: 28px;
+            text-align: center;
+        }
+        h2 span {
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            display: inline-block;
+            padding: 0 5px;
+            height: 20px;
+            border-radius: 20px;
+            background: #E6E6FA;
+            line-height: 22px;
+            text-align: center;
+            color: #666;
+            font-size: 15px;
+        }
+         
+        .add{
+            position: absolute;
+            left:610px;
+            top:13px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" v-cloak>
+        <header class="header">
+            <section>
+                <form id="form">
+                     <label for="title">TodoList</label>
+                     <input type="text" id="title" name="title" autocomplete="off" placeholder="添加ToDo" v-model="title">
+                     <button  @click.enter="add()" class='add'>添加</button>
+                </form>
+            </section>
+        </header>
+        <main>
+         <section>
+                <h2>正在进行<span>{{this.list.length-this.num()}}</span></h2>
+                <ol id="todolist" class="">
+                    <li v-for="(item,key) in list" :key="key" v-show="!item.flag">
+                         <input type="checkbox" v-model="item.flag" >
+                         <p @click="change(key)">
+                             <span v-show="!item.show">{{item.title}}</span>
+                             <input type="text" v-model="item.title" v-show="item.show"  @blur="savelist(key)">
+                         </p>
+                         <a  @click="cancel()">删除</a>
+                    </li>
+                </ol>
+                <h2>已完成<span>{{this.num()}}</span></h2>
+                <ul>
+                     <li v-for="(item,key) in list" :key="key" v-show="item.flag">
+                         <input type="checkbox" v-model="item.flag" >
+                         <p @click="change(key)">
+                             <span v-show="!item.show">{{item.title}}</span>
+                             <input type="text" v-model="item.title" v-show="item.show"  @blur="savelist(key)">
+                         </p>
+                         <a  @click="cancel()">删除</a>
+                         <!--删除功能 -->
+                     </li>
+                </ul>
+         </section>
+         </main>
+         </footer>
+     </div>
+    <script>
+        var vm = new Vue({
+        el:"#app",
+        data:{
+            title:"",
+            list:JSON.parse(localStorage.getItem("to")) || []
+        },
+        methods: {
+            //出发回车键盘按钮的时候进行添加
+           add() {
+               if(this.title=="") return false;
+               this.list.push({title:this.title,flag:false,show:false});
+               localStorage.setItem("to",JSON.stringify(this.list))
+               this.title = "";
+           },
+        
+           savelist(key) {
+                this.list[key].show = false;
+           },
+           //删除信息
+           cancel(e) {
+                this.list.splice(e,1);
+                localStorage.setItem("to",JSON.stringify(this.list));
+           },
+           num(){
+               let count = 0 ;
+               this.list.forEach(e => {
+                    if(e.flag == true) {
+                        count++;
+                    }
+               });
+               return count;
+                localStorage.setItem("to",JSON.stringify(this.list));
+            },
+        },
+    })
+    </script>
+</body>
+</html>
